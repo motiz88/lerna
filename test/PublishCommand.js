@@ -3,6 +3,7 @@ import assert from "assert";
 import path from "path";
 import fs from "fs";
 import { EOL } from "os";
+import escapeArgs from "command-join";
 
 import ChildProcessUtilities from "../src/ChildProcessUtilities";
 import PromptUtilities from "../src/PromptUtilities";
@@ -42,20 +43,20 @@ describe("PublishCommand", () => {
           { args: ["Are you sure you want to publish the above changes?"], returns: true }
         ]],
         [ChildProcessUtilities, "execSync", {}, [
-          { args: ["git add " + path.join(testDir, "lerna.json")] },
-          { args: ["git add " + path.join(testDir, "packages/package-1/package.json")] },
-          { args: ["git add " + path.join(testDir, "packages/package-2/package.json")] },
-          { args: ["git add " + path.join(testDir, "packages/package-3/package.json")] },
-          { args: ["git add " + path.join(testDir, "packages/package-4/package.json")] },
-          { args: ["git add " + path.join(testDir, "packages/package-5/package.json")] },
+          { args: ["git add " + escapeArgs(path.join(testDir, "lerna.json"))] },
+          { args: ["git add " + escapeArgs(path.join(testDir, "packages/package-1/package.json"))] },
+          { args: ["git add " + escapeArgs(path.join(testDir, "packages/package-2/package.json"))] },
+          { args: ["git add " + escapeArgs(path.join(testDir, "packages/package-3/package.json"))] },
+          { args: ["git add " + escapeArgs(path.join(testDir, "packages/package-4/package.json"))] },
+          { args: ["git add " + escapeArgs(path.join(testDir, "packages/package-5/package.json"))] },
           { args: ["git commit -m \"$(echo \"v1.0.1\")\""] },
           { args: ["git tag v1.0.1"] }
         ]],
         [ChildProcessUtilities, "exec", { nodeCallback: true }, [
-          { args: ["cd " + path.join(testDir, "packages/package-1") + " && npm publish --tag lerna-temp"] },
-          { args: ["cd " + path.join(testDir, "packages/package-2") + " && npm publish --tag lerna-temp"] },
-          { args: ["cd " + path.join(testDir, "packages/package-3") + " && npm publish --tag lerna-temp"] },
-          { args: ["cd " + path.join(testDir, "packages/package-4") + " && npm publish --tag lerna-temp"] }
+          { args: ["cd " + escapeArgs(path.join(testDir, "packages/package-1")) + " && npm publish --tag lerna-temp"] },
+          { args: ["cd " + escapeArgs(path.join(testDir, "packages/package-2")) + " && npm publish --tag lerna-temp"] },
+          { args: ["cd " + escapeArgs(path.join(testDir, "packages/package-3")) + " && npm publish --tag lerna-temp"] },
+          { args: ["cd " + escapeArgs(path.join(testDir, "packages/package-4")) + " && npm publish --tag lerna-temp"] }
           // No package-5.  It's private.
         ], true],
         [ChildProcessUtilities, "execSync", {}, [
@@ -142,10 +143,10 @@ describe("PublishCommand", () => {
           { args: ["Are you sure you want to publish the above changes?"], returns: true }
         ]],
         [ChildProcessUtilities, "execSync", {}, [
-          { args: ["git add " + path.join(testDir, "packages/package-1/package.json")] },
-          { args: ["git add " + path.join(testDir, "packages/package-2/package.json")] },
-          { args: ["git add " + path.join(testDir, "packages/package-3/package.json")] },
-          { args: ["git add " + path.join(testDir, "packages/package-4/package.json")] },
+          { args: ["git add " + escapeArgs(path.join(testDir, "packages/package-1/package.json"))] },
+          { args: ["git add " + escapeArgs(path.join(testDir, "packages/package-2/package.json"))] },
+          { args: ["git add " + escapeArgs(path.join(testDir, "packages/package-3/package.json"))] },
+          { args: ["git add " + escapeArgs(path.join(testDir, "packages/package-4/package.json"))] },
           { args: ["git commit -m \"$(echo \"Publish" + EOL + EOL + " - package-1@1.0.1" + EOL + " - package-2@1.1.0" + EOL + " - package-3@2.0.0" + EOL + " - package-4@1.1.0\")\""] },
           { args: ["git tag package-1@1.0.1"] },
           { args: ["git tag package-2@1.1.0"] },
@@ -153,10 +154,10 @@ describe("PublishCommand", () => {
           { args: ["git tag package-4@1.1.0"] }
         ]],
         [ChildProcessUtilities, "exec", { nodeCallback: true }, [
-          { args: ["cd " + path.join(testDir, "packages/package-1") + " && npm publish --tag lerna-temp"] },
-          { args: ["cd " + path.join(testDir, "packages/package-2") + " && npm publish --tag lerna-temp"] },
-          { args: ["cd " + path.join(testDir, "packages/package-3") + " && npm publish --tag lerna-temp"] },
-          { args: ["cd " + path.join(testDir, "packages/package-4") + " && npm publish --tag lerna-temp"] }
+          { args: ["cd " + escapeArgs(path.join(testDir, "packages/package-1")) + " && npm publish --tag lerna-temp"] },
+          { args: ["cd " + escapeArgs(path.join(testDir, "packages/package-2")) + " && npm publish --tag lerna-temp"] },
+          { args: ["cd " + escapeArgs(path.join(testDir, "packages/package-3")) + " && npm publish --tag lerna-temp"] },
+          { args: ["cd " + escapeArgs(path.join(testDir, "packages/package-4")) + " && npm publish --tag lerna-temp"] }
         ]],
         [ChildProcessUtilities, "execSync", {}, [
           { args: ["npm dist-tag ls package-1"], returns: "lerna-temp: 1.0.1" + EOL + "stable: 1.0.0" },
@@ -233,10 +234,10 @@ describe("PublishCommand", () => {
           { args: ["Are you sure you want to publish the above changes?"], returns: true }
         ]],
         [ChildProcessUtilities, "exec", { nodeCallback: true }, [
-          { args: ["cd " + path.join(testDir, "packages/package-1") + " && npm publish --tag lerna-temp"] },
-          { args: ["cd " + path.join(testDir, "packages/package-2") + " && npm publish --tag lerna-temp"] },
-          { args: ["cd " + path.join(testDir, "packages/package-3") + " && npm publish --tag lerna-temp"] },
-          { args: ["cd " + path.join(testDir, "packages/package-4") + " && npm publish --tag lerna-temp"] }
+          { args: ["cd " + escapeArgs(path.join(testDir, "packages/package-1")) + " && npm publish --tag lerna-temp"] },
+          { args: ["cd " + escapeArgs(path.join(testDir, "packages/package-2")) + " && npm publish --tag lerna-temp"] },
+          { args: ["cd " + escapeArgs(path.join(testDir, "packages/package-3")) + " && npm publish --tag lerna-temp"] },
+          { args: ["cd " + escapeArgs(path.join(testDir, "packages/package-4")) + " && npm publish --tag lerna-temp"] }
         ]],
         [ChildProcessUtilities, "execSync", {}, [
           { args: ["git checkout -- packages/*/package.json"] },
@@ -268,7 +269,7 @@ describe("PublishCommand", () => {
 
         try {
           assert.ok(!pathExists.sync(path.join(testDir, "lerna-debug.log")));
-          assert.equal(fs.readFileSync(path.join(testDir, "lerna.json"), "utf-8"), "{\n  \"lerna\": \"__TEST_VERSION__\",\n  \"version\": \"1.0.0\"\n}\n");
+          assert.equal(fs.readFileSync(path.join(testDir, "lerna.json"), "utf-8"), "{" + EOL + "  \"lerna\": \"__TEST_VERSION__\"," + EOL + "  \"version\": \"1.0.0\"" + EOL + "}" + EOL + "");
 
           // The following wouldn't be the actual results of a canary release
           // because `git checkout --` would have removed the file changes.
@@ -322,10 +323,10 @@ describe("PublishCommand", () => {
           { args: ["Are you sure you want to publish the above changes?"], returns: true }
         ]],
         [ChildProcessUtilities, "exec", { nodeCallback: true }, [
-          { args: ["cd " + path.join(testDir, "packages/package-1") + " && npm publish --tag lerna-temp"] },
-          { args: ["cd " + path.join(testDir, "packages/package-2") + " && npm publish --tag lerna-temp"] },
-          { args: ["cd " + path.join(testDir, "packages/package-3") + " && npm publish --tag lerna-temp"] },
-          { args: ["cd " + path.join(testDir, "packages/package-4") + " && npm publish --tag lerna-temp"] }
+          { args: ["cd " + escapeArgs(path.join(testDir, "packages/package-1")) + " && npm publish --tag lerna-temp"] },
+          { args: ["cd " + escapeArgs(path.join(testDir, "packages/package-2")) + " && npm publish --tag lerna-temp"] },
+          { args: ["cd " + escapeArgs(path.join(testDir, "packages/package-3")) + " && npm publish --tag lerna-temp"] },
+          { args: ["cd " + escapeArgs(path.join(testDir, "packages/package-4")) + " && npm publish --tag lerna-temp"] }
         ]],
         [ChildProcessUtilities, "execSync", {}, [
           { args: ["git checkout -- packages/*/package.json"] },
@@ -409,10 +410,10 @@ describe("PublishCommand", () => {
           { args: ["Are you sure you want to publish the above changes?"], returns: true }
         ]],
         [ChildProcessUtilities, "exec", { nodeCallback: true }, [
-          { args: ["cd " + path.join(testDir, "packages/package-1") + " && npm publish --tag lerna-temp"] },
-          { args: ["cd " + path.join(testDir, "packages/package-2") + " && npm publish --tag lerna-temp"] },
-          { args: ["cd " + path.join(testDir, "packages/package-3") + " && npm publish --tag lerna-temp"] },
-          { args: ["cd " + path.join(testDir, "packages/package-4") + " && npm publish --tag lerna-temp"] }
+          { args: ["cd " + escapeArgs(path.join(testDir, "packages/package-1")) + " && npm publish --tag lerna-temp"] },
+          { args: ["cd " + escapeArgs(path.join(testDir, "packages/package-2")) + " && npm publish --tag lerna-temp"] },
+          { args: ["cd " + escapeArgs(path.join(testDir, "packages/package-3")) + " && npm publish --tag lerna-temp"] },
+          { args: ["cd " + escapeArgs(path.join(testDir, "packages/package-4")) + " && npm publish --tag lerna-temp"] }
         ], true],
         [ChildProcessUtilities, "execSync", {}, [
           { args: ["npm dist-tag ls package-1"], returns: "lerna-temp: 1.0.1" + EOL + "stable: 1.0.0" },
@@ -487,12 +488,12 @@ describe("PublishCommand", () => {
           { args: ["Are you sure you want to publish the above changes?"], returns: true }
         ]],
         [ChildProcessUtilities, "execSync", {}, [
-          { args: ["git add " + path.join(testDir, "lerna.json")] },
-          { args: ["git add " + path.join(testDir, "packages/package-1/package.json")] },
-          { args: ["git add " + path.join(testDir, "packages/package-2/package.json")] },
-          { args: ["git add " + path.join(testDir, "packages/package-3/package.json")] },
-          { args: ["git add " + path.join(testDir, "packages/package-4/package.json")] },
-          { args: ["git add " + path.join(testDir, "packages/package-5/package.json")] },
+          { args: ["git add " + escapeArgs(path.join(testDir, "lerna.json"))] },
+          { args: ["git add " + escapeArgs(path.join(testDir, "packages/package-1/package.json"))] },
+          { args: ["git add " + escapeArgs(path.join(testDir, "packages/package-2/package.json"))] },
+          { args: ["git add " + escapeArgs(path.join(testDir, "packages/package-3/package.json"))] },
+          { args: ["git add " + escapeArgs(path.join(testDir, "packages/package-4/package.json"))] },
+          { args: ["git add " + escapeArgs(path.join(testDir, "packages/package-5/package.json"))] },
           { args: ["git commit -m \"$(echo \"v1.0.1\")\""] },
           { args: ["git tag v1.0.1"] }
         ]],
@@ -610,20 +611,20 @@ describe("PublishCommand", () => {
           { args: ["Are you sure you want to publish the above changes?"], returns: true }
         ]],
         [ChildProcessUtilities, "execSync", {}, [
-          { args: ["git add " + path.join(testDir, "lerna.json")] },
-          { args: ["git add " + path.join(testDir, "packages/package-1/package.json")] },
-          { args: ["git add " + path.join(testDir, "packages/package-2/package.json")] },
-          { args: ["git add " + path.join(testDir, "packages/package-3/package.json")] },
-          { args: ["git add " + path.join(testDir, "packages/package-4/package.json")] },
-          { args: ["git add " + path.join(testDir, "packages/package-5/package.json")] },
+          { args: ["git add " + escapeArgs(path.join(testDir, "lerna.json"))] },
+          { args: ["git add " + escapeArgs(path.join(testDir, "packages/package-1/package.json"))] },
+          { args: ["git add " + escapeArgs(path.join(testDir, "packages/package-2/package.json"))] },
+          { args: ["git add " + escapeArgs(path.join(testDir, "packages/package-3/package.json"))] },
+          { args: ["git add " + escapeArgs(path.join(testDir, "packages/package-4/package.json"))] },
+          { args: ["git add " + escapeArgs(path.join(testDir, "packages/package-5/package.json"))] },
           { args: ["git commit -m \"$(echo \"v1.0.1\")\""] },
           { args: ["git tag v1.0.1"] }
         ]],
         [ChildProcessUtilities, "exec", { nodeCallback: true }, [
-          { args: ["cd " + path.join(testDir, "packages/package-1") + " && npm publish --tag lerna-temp"] },
-          { args: ["cd " + path.join(testDir, "packages/package-2") + " && npm publish --tag lerna-temp"] },
-          { args: ["cd " + path.join(testDir, "packages/package-3") + " && npm publish --tag lerna-temp"] },
-          { args: ["cd " + path.join(testDir, "packages/package-4") + " && npm publish --tag lerna-temp"] }
+          { args: ["cd " + escapeArgs(path.join(testDir, "packages/package-1")) + " && npm publish --tag lerna-temp"] },
+          { args: ["cd " + escapeArgs(path.join(testDir, "packages/package-2")) + " && npm publish --tag lerna-temp"] },
+          { args: ["cd " + escapeArgs(path.join(testDir, "packages/package-3")) + " && npm publish --tag lerna-temp"] },
+          { args: ["cd " + escapeArgs(path.join(testDir, "packages/package-4")) + " && npm publish --tag lerna-temp"] }
           // No package-5.  It's private.
         ], true],
         [ChildProcessUtilities, "execSync", {}, [
@@ -715,20 +716,20 @@ describe("PublishCommand", () => {
          { args: ["Are you sure you want to publish the above changes?"], returns: true }
        ]],
        [ChildProcessUtilities, "execSync", {}, [
-         { args: ["git add " + path.join(testDir, "lerna.json")] },
-         { args: ["git add " + path.join(testDir, "packages/package-1/package.json")] },
-         { args: ["git add " + path.join(testDir, "packages/package-2/package.json")] },
-         { args: ["git add " + path.join(testDir, "packages/package-3/package.json")] },
-         { args: ["git add " + path.join(testDir, "packages/package-4/package.json")] },
-         { args: ["git add " + path.join(testDir, "packages/package-5/package.json")] },
+         { args: ["git add " + escapeArgs(path.join(testDir, "lerna.json"))] },
+         { args: ["git add " + escapeArgs(path.join(testDir, "packages/package-1/package.json"))] },
+         { args: ["git add " + escapeArgs(path.join(testDir, "packages/package-2/package.json"))] },
+         { args: ["git add " + escapeArgs(path.join(testDir, "packages/package-3/package.json"))] },
+         { args: ["git add " + escapeArgs(path.join(testDir, "packages/package-4/package.json"))] },
+         { args: ["git add " + escapeArgs(path.join(testDir, "packages/package-5/package.json"))] },
          { args: ["git commit -m \"$(echo \"v1.0.1\")\""] },
          { args: ["git tag v1.0.1"] }
        ]],
        [ChildProcessUtilities, "exec", { nodeCallback: true }, [
-         { args: ["cd " + path.join(testDir, "packages/package-1") + " && npm publish --tag lerna-temp"] },
-         { args: ["cd " + path.join(testDir, "packages/package-2") + " && npm publish --tag lerna-temp"] },
-         { args: ["cd " + path.join(testDir, "packages/package-3") + " && npm publish --tag lerna-temp"] },
-         { args: ["cd " + path.join(testDir, "packages/package-4") + " && npm publish --tag lerna-temp"] }
+         { args: ["cd " + escapeArgs(path.join(testDir, "packages/package-1")) + " && npm publish --tag lerna-temp"] },
+         { args: ["cd " + escapeArgs(path.join(testDir, "packages/package-2")) + " && npm publish --tag lerna-temp"] },
+         { args: ["cd " + escapeArgs(path.join(testDir, "packages/package-3")) + " && npm publish --tag lerna-temp"] },
+         { args: ["cd " + escapeArgs(path.join(testDir, "packages/package-4")) + " && npm publish --tag lerna-temp"] }
          // No package-5.  It's private.
        ], true],
        [ChildProcessUtilities, "execSync", {}, [
